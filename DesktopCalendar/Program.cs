@@ -12,7 +12,7 @@ namespace DesktopCalendar
 {
     class WrongArgsException : ApplicationException
     {
-        public WrongArgsException():base("Use this syntax:" + Environment.NewLine + "desktopcalendar width height folderpath")
+        public WrongArgsException():base("Use this syntax:" + Environment.NewLine + "desktopcalendar back_color fore_color weekend_color")
         {            
         }
     }
