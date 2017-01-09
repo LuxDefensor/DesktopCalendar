@@ -32,8 +32,12 @@ namespace DesktopCalendar
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern Int32 SystemParametersInfo(UInt32 uiAction, UInt32 uiParam, String pvParam, UInt32 fWinIni);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern Int32 GetSystemMetrics(int nIndex);
         private static UInt32 SPI_SETDESKWALLPAPER = 20;
         private static UInt32 SPIF_UPDATEINIFILE = 0x1;
+        private static Int32 SM_CXSCREEN = 0;
+        private static Int32 SM_CYSCREEN = 1;
 
         private static string fileName = "DesktopCalendar.bmp";
         private static Brush background = Brushes.DarkSlateGray;
@@ -51,24 +55,42 @@ namespace DesktopCalendar
         static void Main(string[] args)
         {
             //culture = CultureInfo.GetCultureInfo("en-US");
+            string folder = AppDomain.CurrentDomain.BaseDirectory;
             try
             {
-                if (args.Length != 3)
+            if (!Directory.Exists(folder))
+                throw new WrongArgsException();
+                    int width, height;
+                width = GetSystemMetrics(SM_CXSCREEN);
+                height = GetSystemMetrics(SM_CYSCREEN);
+                if (args.Length == 3)
+                {
+                    int colorBack, colorFront, colorWeekday;
+                    if (int.TryParse(args[0], out colorBack))
+                        background = new SolidBrush(Color.FromArgb(colorBack));
+                    else
+                        background = new SolidBrush(Color.FromName(args[0]));
+                    if (int.TryParse(args[1], out colorFront))
+                        foreground = new SolidBrush(Color.FromArgb(colorFront));
+                    else
+                        foreground = new SolidBrush(Color.FromName(args[1]));
+                    if (int.TryParse(args[2], out colorWeekday))
+                    {
+                        weekend = new SolidBrush(Color.FromArgb(colorWeekday));
+                        currentFrame = new Pen(Color.FromArgb(colorWeekday));
+                    }
+                    else
+                    {
+                        weekend = new SolidBrush(Color.FromName(args[2]));
+                        currentFrame = new Pen(Color.FromName(args[2]));
+                    }
+                }
+                else if (args.Length > 0)
                 {
                     throw new WrongArgsException();
                 }
-                else
-                {
-                    int width, height;
-                    if (!int.TryParse(args[0], out width))
-                        throw new WrongArgsException();
-                    if (!int.TryParse(args[1], out height))
-                        throw new WrongArgsException();
-                    if (!Directory.Exists(args[2]))
-                        throw new WrongArgsException();
-                    CreateImage(width, height, args[2]);
-                    SetImage(Path.Combine(args[2], fileName));
-                }
+                    CreateImage(width, height, folder);
+                    SetImage(Path.Combine(folder, fileName));
             }
             catch (Exception ex)
             {
