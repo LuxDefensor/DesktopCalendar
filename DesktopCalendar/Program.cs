@@ -36,10 +36,10 @@ namespace DesktopCalendar
         private static UInt32 SPIF_UPDATEINIFILE = 0x1;
 
         private static string fileName = "DesktopCalendar.bmp";
-        private static Brush background = Brushes.CadetBlue;
-        private static Brush weekend = Brushes.Brown;
-        private static Brush workday = Brushes.Black;
-        private static Pen currentFrame = new Pen(Color.Brown);
+        private static Brush background = Brushes.DarkSlateGray;
+        private static Brush weekend = Brushes.Orange;
+        private static Brush foreground = Brushes.WhiteSmoke;
+        private static Pen currentFrame = new Pen(Color.Orange);
         private static CultureInfo culture = CultureInfo.CurrentCulture;
 
 
@@ -96,7 +96,7 @@ namespace DesktopCalendar
         {
             float scaleWidth = (float)width / baseWidth;
             float scaleHeight = (float)height / baseHeight;
-            Brush brush = Brushes.Black;
+            Brush brush = foreground;
             StringFormat format = new StringFormat();
             
             // Month's title    
@@ -117,7 +117,7 @@ namespace DesktopCalendar
             int idx = fdw;
             for (int i = 0; i < 7; i++)
             {
-                brush = (idx == 0 || idx == 6) ? weekend : workday;
+                brush = (idx == 0 || idx == 6) ? weekend : foreground;
                 c.DrawString(culture.DateTimeFormat.ShortestDayNames[idx],
                     new Font("Arial", 14), brush,
                     new RectangleF(calendarLeft * scaleWidth + i * dayWidth * scaleWidth,
@@ -142,7 +142,7 @@ namespace DesktopCalendar
                 if (x <0)
                     x = 6;
                 brush = (current.DayOfWeek == DayOfWeek.Saturday || current.DayOfWeek == DayOfWeek.Sunday)
-                         ? weekend : workday;
+                         ? weekend : foreground;
                 dayFrame = new RectangleF(calendarLeft * scaleWidth + x * dayWidth * scaleWidth,
                         calendarTop * scaleHeight + (order - 1) * monthHeight * scaleHeight + dayTitleHeight * scaleHeight + (y - 1) * weekHeight * scaleHeight,
                         dayWidth * scaleWidth, weekHeight * scaleHeight);
@@ -162,10 +162,10 @@ namespace DesktopCalendar
             }
 
             // Month's frame
-            c.DrawRectangle(new Pen(Color.Black),
+            c.DrawRectangle(currentFrame,
                             calendarLeft * scaleWidth,
                             (calendarTop + (order - 1) * monthHeight - dayTitleHeight / 2) * scaleHeight,
-                            (dayWidth * 7.5f + monthTitleWidth) * scaleHeight,
+                            (dayWidth * 7.5f + monthTitleWidth) * scaleWidth,
                             monthHeight * scaleHeight);
         }
 
