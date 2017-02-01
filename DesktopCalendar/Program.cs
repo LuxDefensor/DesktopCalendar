@@ -24,7 +24,7 @@ namespace DesktopCalendar
         private static int baseHeight = 1024;
         private static int monthHeight = 300;
         private static int monthTitleWidth = 50;
-        private static int dayTitleHeight = 30;
+        private static int dayTitleHeight = 60;
         private static int dayWidth = 50;        
         private static int calendarLeft = 700;
         private static int calendarTop = 50;
@@ -154,7 +154,7 @@ namespace DesktopCalendar
             // Month's days
             int x = 0, y = 1;
             int weeks = NumberOfWeeksInMonth(monthDay);
-            float weekHeight = (monthHeight - dayTitleHeight) / weeks;
+            float weekHeight = (monthHeight - dayTitleHeight-20) / weeks;
             DateTime current = new DateTime(monthDay.Year, monthDay.Month, 1);
             DateTime end = current.AddMonths(1);
             RectangleF dayFrame;
